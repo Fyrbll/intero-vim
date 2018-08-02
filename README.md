@@ -1,4 +1,3 @@
-::: {#job ids}
 missing job ids
 ===============
 
@@ -16,9 +15,7 @@ code changes
 -   **process.vim line 193**: commented
     `let g:intero_job_id = b:terminal_job_id` as job ids don\'t exist in
     vim.
-:::
 
-::: {#terminal mechanics}
 terminals in nvim vs vim
 ========================
 
@@ -47,9 +44,7 @@ code changes
     is its own buffer.
 -   **process.vim line 184**: commented `enew` for the same reason as
     line 181.
-:::
 
-::: {#sending keystrokes}
 jobsend() vs term\_sendkeys()
 =============================
 
@@ -102,9 +97,7 @@ code changes
     The keystroke string is in a list because I\'ve made
     `intero#compatibility#jobsend()` take a string as its second
     argument.
-:::
 
-::: {#callbacks and handlers}
 neovim event handlers vs vim callbacks
 ======================================
 
@@ -140,9 +133,7 @@ code changes
     available to vim callback functions.
 -   **process.vim line 316**: commented out the line `endif` because we
     commented its matching `if` on line 304.
-:::
 
-::: {#process}
 termopen() vs term\_start()
 ===========================
 
@@ -233,9 +224,7 @@ code changes
 -   **process.vim line 380**: changed\
     `\ 'out_cb': function('s:on_stdout')` to\
     `\ 'out_cb': function('s:on_stdout'), 'term_name': 'Intero', 'term_rows': 10`
-:::
 
-::: {#new functions}
 new functions
 =============
 
@@ -256,9 +245,7 @@ Added\
 `    return term_start(a:cmd, a:opts)`\
 `endfunction "}}}`\
 to **compatibility.vim**
-:::
 
-::: {#a mysterious issue}
 a mysterious issue
 ==================
 
@@ -278,4 +265,3 @@ code changes
 -   **util.vim line 19**: changed\
     `return bufwinnr('Intero')` to\
     `return bufwinnr(g:intero_buffer_id)`
-:::
