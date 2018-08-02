@@ -56,17 +56,17 @@ arguments
 
 ### jobsend()
 
-name | type | description
-:---:|:---:|:--- |
-job | natural number | the job id of the terminal job to send keys to
-data | string or string list | a single string with a command or a list of strings that will be sent as separate lines
+| name | type | description |
+|:---:|:---:|:--- |
+| job | natural number | the job id of the terminal job to send keys to |
+| data | string or string list | a single string with a command or a list of strings that will be sent as separate lines |
 
 ### term\_sendkeys()
 
-  name   type             description
-  ------ ---------------- ----------------------------------------------------------------
-  buf    natural number   the buffer id of the terminal buffer to send keys to
-  keys   string           a sequence of keystrokes - this is a single string, not a list
+| name | type | description |
+|:---:|:---:|:--- |
+| buf | natural number | the buffer id of the terminal buffer to send keys to |
+| keys | string | a sequence of keystrokes - this is a single string, not a list |
 
 return values
 -------------
@@ -144,30 +144,24 @@ arguments
 
 ### termopen()
 
-  --------------------------------------------------------------------------
-  arg name   arg type     arg description
-  ---------- ------------ --------------------------------------------------
-  cmd        string       command to be run by terminal job
-
-  opts       dictionary   keys are option names, values are option values\
-                          option list can be found with `:help jobstart()`
-  --------------------------------------------------------------------------
+| name | type | description |
+|:---:|:---:|:--- |
+| cmd | string | command to be run by terminal job |
+| opts | dictionary | keys are option names, values are option values\
+                      option list can be found with `:help jobstart()` |
 
 ### term\_start()
 
-  --------------------------------------------------------------------------------------------------------------
-  arg name   arg type     arg description
-  ---------- ------------ --------------------------------------------------------------------------------------
-  cmd        string       command to be run in terminal buffer
-
-  options    dictionary   keys are option names, values are option values\
-                          option list can be found with `:help term_start()` and `:help job-options`\
-                          these options will prove useful for compatibility:\
-                          - \"term\_name\" sets the name of the terminal buffer\
-                          - \"term\_rows\" sets the height of the terminal buffer\
-                          - \"exit\_cb\" is the function to be called when the process exits\
-                          - \"out\_cb\" is the function to be called when the terminal buffer writes to stdout
-  --------------------------------------------------------------------------------------------------------------
+| name | type | description |
+|:---:|:---:|:--- |
+| cmd | string | command to be run in terminal buffer |
+| options | dictionary | keys are option names, values are option values\
+                         option list can be found with `:help term_start()` and `:help job-options`\
+                         these options will prove useful for compatibility:\
+                         - \"term\_name\" sets the name of the terminal buffer\
+                         - \"term\_rows\" sets the height of the terminal buffer\
+                         - \"exit\_cb\" is the function to be called when the process exits\
+                         - \"out\_cb\" is the function to be called when the terminal buffer writes to stdout |
 
 return value
 ------------
