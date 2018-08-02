@@ -1,0 +1,389 @@
+<html>
+<head>
+  <title>Notes on Intero and Vim</title>
+  <link type="text/css" rel="stylesheet" href="stylesheets/intero_notes.css">
+</head>
+<body>
+  <div id="job ids">
+    <h1>missing job ids</h1>
+    <p>
+      The variable <code>g:intero_job_id</code> is surplus to requirements
+      and all lines using it can be commented away/removed.
+    </p>
+    <h2>code changes</h2>
+    <ul>
+      <li>
+        <b>process.vim line 84</b>: commented
+        <code>unlet g:intero_job_id</code> as all references
+        to the variable are to be removed.
+      </li>
+      <li>
+        <b>process.vim line 172</b>: commented
+        <code>let g:intero_job_id = b:terminal_job_id</code>
+        as job ids don't exist in vim.
+      </li>
+      <li>
+        <b>process.vim line 193</b>: commented
+        <code>let g:intero_job_id = b:terminal_job_id</code>
+        as job ids don't exist in vim.
+      </li>
+    </ul>
+  </div>
+  <div id="terminal mechanics">
+    <h1>terminals in nvim vs vim</h1>
+    <p>
+      neovim treats terminals as jobs, each of which needs to be attached to
+      a buffer. Consequently each terminal session is identified by its
+      job id.
+    </p>
+    <p>
+      vim terminal sessions are buffers on their own so they're called
+      terminal buffers. These terminal sessions are thus identified by their
+      buffer ids. 
+    </p>
+    <h2>code changes</h2>
+    <ul>
+      <li>
+        <b>repl.vim line 154</b>: changed
+        <code>if !exists(g:intero_job_id)</code> to
+        <code>if !exists(g:intero_buffer_id)</code>
+      </li>
+      <li>
+        <b>repl.vim line 186</b>: changed
+        <code>if !exists(g:intero_job_id)</code> to
+        <code>if !exists(g:intero_buffer_id)</code>
+      </li>
+      <li>
+        <b>process.vim line 162</b>: commented 
+        <code>exe 'below ' . a:height . ' split'</code>
+        because a vim terminal session is its own buffer.
+        There's no need to open a new buffer and then attach a terminal session
+        to it.
+      </li>
+      <li>
+        <b>process.vim line 164</b>: commented <code>enew</code> for the same
+        reason as line 162.
+      </li>
+      <li>
+        <b>process.vim line 181</b>: commented 
+        <code>exe 'below ' . a:height . ' split'</code>
+        because a vim terminal session is its own buffer.
+      </li>
+      <li>
+        <b>process.vim line 184</b>: commented <code>enew</code> for the same
+        reason as line 181.
+      </li>
+    </ul>
+  </div>
+  <div id="sending keystrokes">
+    <h1>jobsend() vs term_sendkeys()</h1>
+    <p>
+      The vim function with a role closest to neovim's <code>jobsend()</code> is
+      <code>term_sendkeys()</code>.
+    </p>
+    <h2>arguments</h2>
+    <h3>jobsend()</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>type</th>
+          <th>description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>job</td>
+          <td>natural number</td>
+          <td>the job id of the terminal job to send keys to</td>
+        </tr>
+        <tr>
+          <td>data</td>
+          <td>string</td>
+          <td>
+            a single string with a command or a list of strings that will
+            be sent as separate lines
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>term_sendkeys()</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>type</th>
+          <th>description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>buf</td>
+          <td>natural number</td>
+          <td>the buffer id of the terminal buffer to send keys to</td>
+        </tr>
+        <tr>
+          <td>keys</td>
+          <td>string</td>
+          <td>
+            a sequence of keystrokes - this is a single string, not a list
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h2>return values</h2>
+    <h3>jobsend()</h3>
+    <p>
+      1 if the write to the job's stdin succeeded, 0 otherwise
+    </p>
+    <h3>term_sendkeys()</h3>
+    <p>
+      no return value
+    </p>
+    <h2>side effects</h2>
+    <p>
+      neither function has other effects worth mentioning
+    </p>
+    <h2>code changes</h2>
+    <p>
+      <code>intero#compatibility#jobsend()</code> simply calls
+      <code>term_sendkeys()</code>
+    </p>
+    <ul>
+      <li>
+        <b>repl.vim line 154</b>: changed
+        <code>jobsend(g:intero_job_id, add([a:str], ''))</code> to
+        <code>intero#compatibility#jobsend(g:intero_buffer_id, add([a:str], ''))</code>
+      </li>
+      <li>
+        <b>repl.vim line 186</b>: changed
+        <code>jobsend(g:intero_job_id, "\&lt;C-u&gt;")</code> to
+        <code>intero#compatibility#jobsend(g:intero_buffer_id, ["\&lt;C-u&gt;"])</code><br>
+        The keystroke string is in a list because I've made
+        <code>intero#compatibility#jobsend()</code> take a string as its
+        second argument.
+      </li>
+    </ul>
+  </div>
+  <div id="callbacks and handlers">
+    <h1>neovim event handlers vs vim callbacks</h1>
+    <p>
+      The format for callbacks (or "event handlers") in neovim is found using
+      <code>:help job-control</code>.<br>
+      An event handler takes three arguments - a job id, the message, and
+      the event itself. The message argument can be a single string or a
+      list of strings.
+    </p>
+    <p>
+      vim callbacks are different. Their format is described in <b>channel.txt</b>
+      and can be accessed by running <code>:help channel-callback</code>.
+      A vim callback takes two arguments - the channel, and the message. The
+      message argument will be a single string and not a list.
+    </p>
+    <h2>code changes</h2>
+    <ul>
+      <li>
+        <b>process.vim line 199</b>: changed the function signature
+        from<br>
+        <code>function! s:on_stdout(jobid, lines, event) abort</code> to<br>
+        <code>function! s:on_stdout(channel, lines) abort</code>.
+      </li>
+      <li>
+        <b>process.vim line 200</b>: changed<br>
+        <code>for l:line_seg in a:lines</code> to<br>
+        <code>for l:line_seg in split(a:lines, "\n")</code> <br>
+        because vim callbacks receive single strings and not lists of
+        strings.<br>
+        I'm not even sure if a newline is the right character to split on...
+      </li>
+      <li>
+        <b>process.vim line 303</b>: changed the function signature
+        from<br>
+        <code>function! s:build_complete(job_id, data, event) abort</code>
+        to<br>
+        <code>function! s:build_complete(channel, data) abort</code>.
+      </li>
+      <li>
+        <b>process.vim line 304</b>: commented out the line
+        <code>if(a:event ==# 'exit')</code> because <code>event</code>
+        is not an argument available to vim callback functions.
+      </li>
+      <li>
+        <b>process.vim line 316</b>: commented out the line
+        <code>endif</code> because we commented its matching <code>if</code>
+        on line 304.
+      </li>
+    </ul>
+  </div>
+  <div id="process">
+    <h1>termopen() vs term_start()</h1>
+    <p>
+    vim's closest counterpart to neovim's <code>termopen()</code> is
+    <code>term_start()</code>.
+    </p>
+    <h2>arguments</h2>
+    <h3>termopen()</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>arg name</th>
+          <th>arg type</th>
+          <th>arg description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>cmd</td>
+          <td>string</td>
+          <td>command to be run by terminal job</td>
+        </tr>
+        <tr>
+          <td>opts</td>
+          <td>dictionary</td>
+          <td>
+            keys are option names, values are option values<br>
+            option list can be found with <code>:help jobstart()</code>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>term_start()</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>arg name</th>
+          <th>arg type</th>
+          <th>arg description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>cmd</td>
+          <td>string</td>
+          <td>command to be run in terminal buffer</td>
+        </tr>
+        <tr>
+          <td>options</td>
+          <td>dictionary</td>
+          <td class="left_aligned">
+            keys are option names, values are option values<br>
+            option list can be found with <code>:help term_start()</code> and
+            <code>:help job-options</code><br>
+            these options will prove useful for compatibility:<br>
+            - "term_name" sets the name of the terminal buffer<br>
+            - "term_rows" sets the height of the terminal buffer<br>
+            - "exit_cb" is the function to be called when the process exits<br>
+            - "out_cb" is the function to be called when the terminal buffer
+            writes to stdout
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h2>return value</h2>
+    <h3>termopen()</h3>
+    <p>
+      returns 0 or -1 on failure (details omitted) and the job id otherwise
+    </p>
+    <h3>term_start()</h3>
+    <p>
+      buffer id of the terminal buffer it creates
+    </p>
+    <h2>side effects</h2>
+    <h3>termopen()</h3>
+    <p>
+    starts a terminal emulator session that's linked to the active buffer at
+    the time it was called 
+    </p>
+    <h3>term_start()</h3>
+    <p>
+    opens a new buffer altogether to house the terminal emulator.
+    </p>
+    <h2>advised alterations</h2>
+    <p>
+    In neovim, the process of creating a terminal job in a new buffer involves
+    first creating a buffer with a command like <code>split</code> or
+    <code>enew</code> before calling <code>termopen()</code>.
+    This doesn't have to happen in vim because <code>term_start()</code>
+    creates a new buffer anyway. The preceding <code>enew</code> or
+    <code>split</code> can simply be done away with.
+    </p>
+    <p>
+    To open a vim terminal buffer below the current buffer we can prepend
+    the keyword <code>below</code> to
+    <code>call intero#compatibility#termopen(...)</code>
+    </p>
+    <h2>code changes</h2>
+    <ul>
+      <li>
+        <b>process.vim line 165</b>: changed<br>
+        <code>call termopen('stack ' . intero#util#stack_opts() . ' build intero', a:opts)</code>
+        to
+        <code>below call intero#compatibility#termopen('stack ' . intero#util#stack_opts() . ' build intero', a:opts)</code>
+      </li>
+      <li>
+        <b>process.vim line 166</b>: commented
+        <code>execute 'file ' . s:compile_term_name</code>
+        because it tries to rename the new buffer (which in vim's case will be
+        an un-renameable terminal buffer). 
+      </li>
+      <li>
+        <b>process.vim line 185</b>: changed<br>
+        <code>call termopen(l:invocation.command, l:invocation.options)</code>
+        to<br>
+        <code>below call intero#compatibility#termopen(l:invocation.command, l:invocation.options)</code>.
+      </li>
+      <li>
+        <b>process.vim line 371</b>: changed<br>
+        <code>let l:opts = { 'exit_cb': function('s:build_complete') }</code> to<br>
+        <code>let l:opts = { 'exit_cb': function('s:build_complete'), 'term_name': s:compile_term_name, 'term_rows': 10 }</code>
+      </li>
+      <li>
+        <b>process.vim line 380</b>: changed<br>
+        <code>\ 'out_cb': function('s:on_stdout')</code> to<br>
+        <code>\ 'out_cb': function('s:on_stdout'), 'term_name': 'Intero', 'term_rows': 10</code>
+      </li>
+    </ul>
+  </div>
+  <div id="new functions">
+    <h1>new functions</h1>
+    <h2>intero#compatibility#jobsend()</h2>
+    <p>
+      Added<br>
+      <code>function! intero#compatibility#jobsend(buf, data) abort "{{{</code><br>
+      <code>    call term_sendkeys(a:buf, join(a:data,"\&lt;CR&gt;"))</code><br>
+      <code>endfunction "}}}</code><br>
+      to <b>compatibility.vim</b>.
+    </p>
+    <h2>intero#compatibility#termopen()</h2>
+    <p>
+      Added<br>
+      <code>function! intero#compatibility#termopen(cmd, opts) abort "{{{ </code><br>
+      <code>    return term_start(a:cmd, a:opts)</code><br>
+      <code>endfunction "}}}</code><br>
+      to <b>compatibility.vim</b>
+    </p>
+  </div>
+  <div id="a mysterious issue">
+    <h1>a mysterious issue</h1>
+    <p>
+      After I run <code>intero#process#start()</code> the haskell buffer
+      acquires the alternate buffer name 'Intero' while the intero REPL buffer
+      acquires the primary name 'Intero'.<br>
+      I don't know why this happens but it means that when I run
+      <code>:echo bufwinnr('Intero')</code> it returns a positive integer
+      even if no window containing the intero buffer is visible.<br>
+      <code>intero#util#get_intero_window()</code> stops working properly
+      because of this and so I'm replacing 'Intero' in the function with
+      the buffer id of the terminal buffer running intero.
+    </p>
+    <h2>code changes</h2>
+    <ul>
+      <li>
+        <b>util.vim line 19</b>: changed<br>
+        <code>return bufwinnr('Intero')</code> to<br>
+        <code>return bufwinnr(g:intero_buffer_id)</code>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
