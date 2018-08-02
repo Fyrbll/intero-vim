@@ -147,21 +147,20 @@ arguments
 | name | type | description |
 |:---:|:---:|:--- |
 | cmd | string | command to be run by terminal job |
-| opts | dictionary | keys are option names, values are option values\
-                      option list can be found with `:help jobstart()` |
+| opts | dictionary | keys are option names, values are option values and an option list can be found with `:help jobstart()` |
 
 ### term\_start()
 
 | name | type | description |
 |:---:|:---:|:--- |
 | cmd | string | command to be run in terminal buffer |
-| options | dictionary | keys are option names, values are option values\
-                         option list can be found with `:help term_start()` and `:help job-options`\
-                         these options will prove useful for compatibility:\
-                         - \"term\_name\" sets the name of the terminal buffer\
-                         - \"term\_rows\" sets the height of the terminal buffer\
-                         - \"exit\_cb\" is the function to be called when the process exits\
-                         - \"out\_cb\" is the function to be called when the terminal buffer writes to stdout |
+| options | dictionary | keys are option names, values are option values, option list can be found with `:help term_start()` and `:help job-options` |
+
+Useful options:
+- \"term\_name\" sets the name of the terminal buffer
+- \"term\_rows\" sets the height of the terminal buffer
+- \"exit\_cb\" is the function to be called when the process exits
+- \"out\_cb\" is the function to be called when the terminal buffer writes to stdout
 
 return value
 ------------
