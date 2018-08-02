@@ -56,10 +56,10 @@ arguments
 
 ### jobsend()
 
-  name   type             description
-  ------ ---------------- -----------------------------------------------------------------------------------------
-  job    natural number   the job id of the terminal job to send keys to
-  data   string           a single string with a command or a list of strings that will be sent as separate lines
+name | type | description
+:---:|:---:|:--- |
+job | natural number | the job id of the terminal job to send keys to
+data | string or string list | a single string with a command or a list of strings that will be sent as separate lines
 
 ### term\_sendkeys()
 
