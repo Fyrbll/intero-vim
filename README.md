@@ -1,3 +1,70 @@
+ORIGINAL PROJECT
+================
+
+Check out the [intero-neovim](https://github.com/parsonsmatt/intero-neovim) project!
+Most of the code here comes directly from it. My changes are listed in detail below.
+
+This project is actually an intended resolution to [Issue #149](https://github.com/parsonsmatt/intero-neovim/issues/149)
+of the project above.
+
+INSTALLATION
+============
+
+Here are the installation steps for Vim 8's built-in package manager:
+- Create a **pack** folder inside your **.vim** folder
+- Create a folder with any name you like (I call mine **packages**) in **pack**
+- Create two folders called **start** and **opt** inside **packages**
+- Put the entire **intero-vim** folder in your **opt** directory
+
+USAGE
+=====
+
+This is the simple setup I'm working with right now, but please do check the README for the intero-vim project for a
+better suggested configuration.
+
+Add these lines to your **vimrc** file:
+
+    " intero-vim plugin mappings ------ {{{
+    augroup intero_maps
+      autocmd!
+      " Load the neomake plugin files
+      autocmd FileType haskell packadd neomake
+      " Load the intero-vim plugin files
+      autocmd FileType haskell packadd intero-vim
+
+      " Start intero
+      autocmd FileType haskell nnoremap <localleader>is :InteroStart<CR>
+      " Kill intero
+      autocmd FileType haskell nnoremap <localleader>ik :InteroKill<CR>
+
+      " Open intero/GHCi split horizontally
+      autocmd FileType haskell nnoremap <localleader>io :InteroOpen<CR>
+      " Hide intero/GHCi split
+      autocmd FileType haskell nnoremap <localleader>ih :InteroHide<CR>
+
+      " Manually save and reload
+      autocmd FileType haskell nnoremap <localleader>ir :InteroReload<CR>
+
+      " Load individual modules
+      autocmd FileType haskell nnoremap <localleader>im :InteroLoadCurrentModule<CR>
+      autocmd FileType haskell nnoremap <localleader>if :InteroLoadCurrentFile<CR>
+
+      " Type-related information
+      autocmd FileType haskell nnoremap <localleader>it <Plug>InteroGenericType
+      autocmd FileType haskell nnoremap <localleader>iT <Plug>InteroType
+
+      " Insert type above identifier under cursor
+      autocmd FileType haskell nnoremap <localleader>ii :InteroTypeInsert<CR>
+
+      " Navigation
+      autocmd FileType haskell nnoremap <localleader>ig :InteroGoToDef<CR>
+
+      " Managing targets
+      " Prompts you to enter targets (no silent):
+      " autocmd FileType haskell nnoremap <localleader>is :InteroSetTargets<SPACE>
+    augroup END
+    " }}}
+
 missing job ids
 ===============
 
