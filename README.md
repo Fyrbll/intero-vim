@@ -1,4 +1,4 @@
-ORIGINAL PROJECT
+Original Project
 ================
 
 Check out the [intero-neovim](https://github.com/parsonsmatt/intero-neovim) project!
@@ -7,7 +7,7 @@ Most of the code here comes directly from it. My changes are listed in detail be
 This project is actually an intended resolution to [Issue #149](https://github.com/parsonsmatt/intero-neovim/issues/149)
 of the project above.
 
-INSTALLATION
+Installation
 ============
 
 Here are the installation steps for Vim 8's built-in package manager:
@@ -16,7 +16,7 @@ Here are the installation steps for Vim 8's built-in package manager:
 - Create two folders called **start** and **opt** inside **packages**
 - Put the entire **intero-vim** folder in your **opt** directory
 
-USAGE
+Usage
 =====
 
 This is the simple setup I'm working with right now, but please do check the README for the intero-vim project for a
@@ -65,8 +65,11 @@ Add these lines to your **vimrc** file:
     augroup END
     " }}}
 
+Changes
+=======
+
 missing job ids
-===============
+---------------
 
 The variable `g:intero_job_id` is surplus to requirements and all lines
 using it can be commented away/removed.
