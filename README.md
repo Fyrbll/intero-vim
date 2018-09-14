@@ -19,8 +19,8 @@ Here are the installation steps for Vim 8's built-in package manager:
 Usage
 =====
 
-This is the simple setup I'm working with right now, but please do check the README for the intero-vim project for a
-better suggested configuration.
+This is the simple setup I'm working with right now, but please do check the README for the 
+[intero-neovim](https://github.com/parsonsmatt/intero-neovim) project for a better suggested configuration.
 
 Add these lines to your **vimrc** file:
 
