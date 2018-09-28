@@ -1,10 +1,12 @@
 Original Project
 ================
 
-Check out the [intero-neovim](https://github.com/parsonsmatt/intero-neovim) project!
-Most of the code here comes directly from it. My changes are listed in detail below.
+Check out the [intero-neovim](https://github.com/parsonsmatt/intero-neovim)
+project! Most of the code here comes directly from it. My changes are listed
+in detail below.
 
-This project is actually an intended resolution to [Issue #149](https://github.com/parsonsmatt/intero-neovim/issues/149)
+This project is actually an intended resolution to
+[Issue #149](https://github.com/parsonsmatt/intero-neovim/issues/149)
 of the project above.
 
 Installation
@@ -19,8 +21,9 @@ Here are the installation steps for Vim 8's built-in package manager:
 Usage
 =====
 
-This is the simple setup I'm working with right now, but please do check the README for the 
-[intero-neovim](https://github.com/parsonsmatt/intero-neovim) project for a better suggested configuration.
+This is the simple setup I'm working with right now, but please do check the
+README for the [intero-neovim](https://github.com/parsonsmatt/intero-neovim)
+project for a better suggested configuration.
 
 Add these lines to your **vimrc** file:
 
@@ -129,14 +132,16 @@ arguments
 | name | type | description |
 |:---:|:---:|:--- |
 | job | natural number | the job id of the terminal job to send keys to |
-| data | string or string list | a single string with a command or a list of strings that will be sent as separate lines |
+| data | string or string list | a single string with a command or a list of
+strings that will be sent as separate lines |
 
 ### term\_sendkeys()
 
 | name | type | description |
 |:---:|:---:|:--- |
 | buf | natural number | the buffer id of the terminal buffer to send keys to |
-| keys | string | a sequence of keystrokes - this is a single string, not a list |
+| keys | string | a sequence of keystrokes - this is a single string,
+not a list |
 
 return values
 -------------
@@ -217,20 +222,23 @@ arguments
 | name | type | description |
 |:---:|:---:|:--- |
 | cmd | string | command to be run by terminal job |
-| opts | dictionary | keys are option names, values are option values and an option list can be found with `:help jobstart()` |
+| opts | dictionary | keys are option names, values are option values and an
+option list can be found with `:help jobstart()` |
 
 ### term\_start()
 
 | name | type | description |
 |:---:|:---:|:--- |
 | cmd | string | command to be run in terminal buffer |
-| options | dictionary | keys are option names, values are option values, option list can be found with `:help term_start()` and `:help job-options` |
+| options | dictionary | keys are option names, values are option values,
+option list can be found with `:help term_start()` and `:help job-options` |
 
 Useful options:
 - \"term\_name\" sets the name of the terminal buffer
 - \"term\_rows\" sets the height of the terminal buffer
 - \"exit\_cb\" is the function to be called when the process exits
-- \"out\_cb\" is the function to be called when the terminal buffer writes to stdout
+- \"out\_cb\" is the function to be called when the terminal buffer writes to
+stdout
 
 return value
 ------------
@@ -272,21 +280,24 @@ code changes
 
 -   **process.vim line 165**: changed\
     `call termopen('stack ' . intero#util#stack_opts() . ' build intero', a:opts)`
-    to
-    `below call intero#compatibility#termopen('stack ' . intero#util#stack_opts() . ' build intero', a:opts)`
+    to `below call intero#compatibility#termopen('stack ' .
+    intero#util#stack_opts() . ' build intero', a:opts)`
 -   **process.vim line 166**: commented
     `execute 'file ' . s:compile_term_name` because it tries to rename
     the new buffer (which in vim\'s case will be an un-renameable
     terminal buffer).
 -   **process.vim line 185**: changed\
     `call termopen(l:invocation.command, l:invocation.options)` to\
-    `below call intero#compatibility#termopen(l:invocation.command, l:invocation.options)`.
+    `below call intero#compatibility#termopen(l:invocation.command,
+    l:invocation.options)`.
 -   **process.vim line 371**: changed\
     `let l:opts = { 'exit_cb': function('s:build_complete') }` to\
-    `let l:opts = { 'exit_cb': function('s:build_complete'), 'term_name': s:compile_term_name, 'term_rows': 10 }`
+    `let l:opts = { 'exit_cb': function('s:build_complete'), 'term_name':
+    s:compile_term_name, 'term_rows': 10 }`
 -   **process.vim line 380**: changed\
     `\ 'out_cb': function('s:on_stdout')` to\
-    `\ 'out_cb': function('s:on_stdout'), 'term_name': 'Intero', 'term_rows': 10`
+    `\ 'out_cb': function('s:on_stdout'), 'term_name': 'Intero',
+    'term_rows': 10`
 
 new functions
 =============
