@@ -68,6 +68,85 @@ Add these lines to your **vimrc** file:
     augroup END
     " }}}
 
+Coming from Spacemacs?
+======================
+Here are a few concerns that a Redditor with a Spacemacs background had, I
+want to address them one-by-one:
+
+- Intero doesn't start automatically, even if 
+  `let g:intero_start_immediately = 1 is set.`
+  + *Cause* 
+  + *Fix*
+
+- Unlike in spacemacs, when the intero window is selected, I cannot use
+  `<ESC>:` to type commands such as `:q`.
+  This is especially annoying if I reach the buffer using `:bn`,
+  because that means I cannot use `:bN` to go back to the previous buffer.
+  + *Cause* 
+  + *Fix*
+
+- Unlike in spacemacs, using `:q` to close the file with which the
+  intero buffer is associated doesn't automatically close the intero buffer,
+  instead the intero buffer buffer becomes the current buffer.
+  I guess I just have to remember to quit with `:qa!` instead of `:q` from
+  now on.
+  + *Cause* 
+  + *Fix*
+
+- Unlike in spacemacs, `:InteroReload` does not save the file before
+  reloading intero.
+  It was easy to make `\ir` do that though,
+  by tweaking the provided **.vimrc** snippet.
+  + *Cause* 
+  + *Fix*
+
+- `:InteroGenericType` and `:InteroType` both worked fine,
+  but `\it` and `\iT` did not.
+  I notice that those two use `<Plug>` instead of `:` in your
+  **.vimrc** snippet, what is this supposed to do?
+  When I replace it with `:`, then `\it` and `\iT` both work fine too.
+  + *Cause* 
+  + *Fix*
+
+- In spacemacs, I can select an expression and ask for its type, whereas with
+  intero-vim, it looks like I can only ask for the type of the identifier
+  under the cursor?
+  + *Cause* 
+  + *Fix*
+
+- When `:InteroGoToDef/\ig` goes to a definition within the current file,
+  I can't use `<backtick><backtick>` nor `<Ctrl-O>` to go back to the
+  previous position.
+  + *Cause* 
+  + *Fix*
+
+- The defaults seem to be different than in intero for neovim;
+  the documentation implies that set updatetime=1000 is the default,
+  but when I enable let `g:intero_type_on_hover = 1`,
+  the type appears after 4 seconds, not one.
+  + *Cause* 
+  + *Fix*
+
+- While `:InteroUses` does use `:uses` in order to obtain the uses of the
+  identifier under the cursor, it doesn't seem to do anything with that list;
+  instead, it sets `:hsl` to highlight the search results, and searches for
+  the current word, which highlights more occurrences than the `:uses` list.
+  + *Cause* 
+  + *Fix*
+
+- While recent versions of ghci support `:type-at`, `:loc-at`, and
+  `:uses`, and setting
+  `let g:intero_backend = {'command': 'stack ghci'}`
+  does switch the backend from intero to ghci, intero for vim does not
+  run :set +c before loading the file, and so all those features are disabled.
+  Setting it manually partially fixes the problem:
+  `:InteroGoToDef` and `:InteroUses:` work, but `:InteroType` and
+  `:InteroGenericType` don't, because intero for vim doesn't quite give the
+  right range around the word under the cursor, and ghci is less forgiving
+  than intero about those ranges.
+  + *Cause* 
+  + *Fix*
+
 Changes
 =======
 
