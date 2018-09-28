@@ -132,16 +132,14 @@ arguments
 | name | type | description |
 |:---:|:---:|:--- |
 | job | natural number | the job id of the terminal job to send keys to |
-| data | string or string list | a single string with a command or a list of
-strings that will be sent as separate lines |
+| data | string or string list | a single string with a command or a list of strings that will be sent as separate lines |
 
 ### term\_sendkeys()
 
 | name | type | description |
 |:---:|:---:|:--- |
 | buf | natural number | the buffer id of the terminal buffer to send keys to |
-| keys | string | a sequence of keystrokes - this is a single string,
-not a list |
+| keys | string | a sequence of keystrokes - this is a single string, not a list |
 
 return values
 -------------
@@ -222,16 +220,14 @@ arguments
 | name | type | description |
 |:---:|:---:|:--- |
 | cmd | string | command to be run by terminal job |
-| opts | dictionary | keys are option names, values are option values and an
-option list can be found with `:help jobstart()` |
+| opts | dictionary | keys are option names, values are option values and an option list can be found with `:help jobstart()` |
 
 ### term\_start()
 
 | name | type | description |
 |:---:|:---:|:--- |
 | cmd | string | command to be run in terminal buffer |
-| options | dictionary | keys are option names, values are option values,
-option list can be found with `:help term_start()` and `:help job-options` |
+| options | dictionary | keys are option names, values are option values, option list can be found with `:help term_start()` and `:help job-options` |
 
 Useful options:
 - \"term\_name\" sets the name of the terminal buffer
