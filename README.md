@@ -68,15 +68,21 @@ Add these lines to your **vimrc** file:
     augroup END
     " }}}
 
-Coming from Spacemacs?
-======================
-Here are a few concerns that a Redditor with a Spacemacs background had, I
-want to address them one-by-one:
+Response to Feedback
+====================
+Here are a few concerns that a Redditor with a Spacemacs background had, I'll
+fill out the *Cause* and *Fix* sections as I understand each issue and learn
+how to fix it:
 
 - Intero doesn't start automatically, even if 
   `let g:intero_start_immediately = 1 is set.`
-  + *Cause* 
-  + *Fix*
+  + *Cause* Vim 8's `:packadd` command doesn't source .vim files in
+intero-vim's **after** directory while the line that automatically starts
+intero is in **after/ftplugin/haskell/intero.vim**
+  + *Fix* Add the line
+`autocmd FileType haskell runtime OPT after/ftplugin/haskell/intero.vim` to
+your **vimrc** on a line after 
+`autocmd FileType haskell packadd intero-vim`
 
 - Unlike in spacemacs, when the intero window is selected, I cannot use
   `<ESC>:` to type commands such as `:q`.
