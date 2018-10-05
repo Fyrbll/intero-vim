@@ -88,8 +88,13 @@ your **vimrc** on a line after
   `<ESC>:` to type commands such as `:q`.
   This is especially annoying if I reach the buffer using `:bn`,
   because that means I cannot use `:bN` to go back to the previous buffer.
-  + *Cause* 
-  + *Fix*
+  + *Cause* To type commands like `:q` and `:bn` when inside a terminal
+window the general procedure is to use the 'termwinkey' (which is
+`<c-w>` by default) followed by the keys for the command itself.
+  + *Fix* Change the value of the 'termwinkey' option *before* the
+intero window is opened. One convenient way to make sure that this happens
+is to add the line `autocmd FileType haskell set termwinkey=<esc>` as the
+**first** autocommand in the **intero_maps** autocommand group.
 
 - Unlike in spacemacs, using `:q` to close the file with which the
   intero buffer is associated doesn't automatically close the intero buffer,
