@@ -101,8 +101,7 @@ is to add the line `autocmd FileType haskell set termwinkey=<esc>` as the
   instead the intero buffer buffer becomes the current buffer.
   I guess I just have to remember to quit with `:qa!` instead of `:q` from
   now on.
-  + *Cause* The `:q` command is working as it normally should. From vim help:
-> Quit the current window. Quit Vim if this is the last window.
+  + *Cause* The `:q` command is working as it normally should.
   + *Fix* Running `:q` triggers the **QuitPre** autocommand event, and we
 can tell vim to kill the intero process if **QuitPre** is triggered by adding
 `autocmd QuitPre *.hs InteroKill` to the autocommand group. There is a problem
