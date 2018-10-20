@@ -112,8 +112,9 @@ doesn't end with **.hs**, the **InteroKill** autocommand will not execute.
   reloading intero.
   It was easy to make `\ir` do that though,
   by tweaking the provided **.vimrc** snippet.
-  + *Cause* 
-  + *Fix*
+  + *Cause* The **InteroReload** command is working as it is supposed to
+  + *Fix* Change the key sequence `<localleader>ir` is mapped to. Make
+it `:w<CR>:InteroReload<CR>`
 
 - `:InteroGenericType` and `:InteroType` both worked fine,
   but `\it` and `\iT` did not.
