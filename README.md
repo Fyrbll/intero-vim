@@ -121,14 +121,22 @@ it `:w<CR>:InteroReload<CR>`
   I notice that those two use `<Plug>` instead of `:` in your
   **.vimrc** snippet, what is this supposed to do?
   When I replace it with `:`, then `\it` and `\iT` both work fine too.
-  + *Cause* 
-  + *Fix*
-
-- In spacemacs, I can select an expression and ask for its type, whereas with
+  In spacemacs, I can select an expression and ask for its type, whereas with
   intero-vim, it looks like I can only ask for the type of the identifier
   under the cursor?
-  + *Cause* 
-  + *Fix*
+  + *Cause* The `:<Plug>InteroType` command is internally defined as
+`noremap <expr> <Plug>InteroType intero#repl#pos_for_type(0)`
+I made the error of mapping `\it` to `<Plug>InteroType` using a
+non-recursive map in normal mode, rendering it useless.
+  + *Fix* Changing the lines that map `\it` and `\iT` to their respective
+commands like so fixes things
+`autocmd FileType haskell map <localleader>it <Plug>InteroGenericType`
+`autocmd FileType haskell map <localleader>iT <Plug>InteroType`
+The idea is that `<Plug>InteroGenericType` works the same as
+`:InteroGenericType` when used in normal mode and queries the type of the
+expression under the cursor. In visual mode, it queries the type of the
+selected expression. So mappings to `:InteroGenericType` and `:InteroType`
+aren't necessary.
 
 - When `:InteroGoToDef/\ig` goes to a definition within the current file,
   I can't use `<backtick><backtick>` nor `<Ctrl-O>` to go back to the
