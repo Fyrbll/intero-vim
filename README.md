@@ -73,8 +73,10 @@ Add these lines to your **vimrc** file:
       " Insert type above identifier under cursor
       autocmd FileType haskell nnoremap <localleader>ii :InteroTypeInsert<CR>
 
-      " Navigation
-      autocmd FileType haskell nnoremap <localleader>ig :InteroGoToDef<CR>
+      " Go to the definition of the identifier under the cursor
+      " To move back to the location you ran this mapping from, you can
+      " use <Ctrl-O>
+      autocmd FileType haskell nnoremap <localleader>ig m':InteroGoToDef<CR>
 
       " Managing targets
       " Prompts you to enter targets (no silent):
@@ -155,8 +157,17 @@ aren't necessary.
 - When `:InteroGoToDef/\ig` goes to a definition within the current file,
   I can't use `<backtick><backtick>` nor `<Ctrl-O>` to go back to the
   previous position.
-  + *Cause* 
-  + *Fix*
+  + *Cause* `:InteroGoToDef` uses Vim's `cursor()` function. `cursor()`
+does not change the jumplist. Since `<backtick><backtick>` and `<Ctrl-O>` 
+need to read the jumplist to perform a "back jump" they can't be used to
+go back to the previous position.
+  + *Fix* This can be fixed quickly by changing the keystrokes that
+`\ig` is mapped to. The line ought to be
+`autocmd FileType haskell nnoremap <localleader>ig m':InteroGoToDef<CR>`
+`m'` manually adds the cursor's current position to the jump list.
+This change allows me to use `<Ctrl-O>` to perform a "back jump" 
+after running `:InteroGoToDef` or equivalently `\ig`.  Note that
+`<backtick><backtick>` still doesn't work and I haven't understood why.
 
 - The defaults seem to be different than in intero for neovim;
   the documentation implies that set updatetime=1000 is the default,
