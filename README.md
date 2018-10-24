@@ -30,15 +30,29 @@ Add these lines to your **vimrc** file:
     " intero-vim plugin mappings ------ {{{
     augroup intero_maps
       autocmd!
+      " When the option 'termwinkey' is <Esc>, you can enter Vim commands
+      " like :q and :bn when the Intero window is selected by hitting
+      " the escape key before typing the colon
+      autocmd FileType haskell set termwinkey=<Esc>
+
+      " Set this to 1 if you want intero-vim to start automatically when you
+      " open a .hs file
+      let g:intero_start_immediately=0
+
       " Load the neomake plugin files
       autocmd FileType haskell packadd neomake
       " Load the intero-vim plugin files
       autocmd FileType haskell packadd intero-vim
+      " Vim 8's package manager doesn't load files from a plugin's 'after'
+      " directory, so we load an important script manually
+      autocmd FileType haskell runtime OPT after/ftplugin/haskell/intero.vim 
 
       " Start intero
       autocmd FileType haskell nnoremap <localleader>is :InteroStart<CR>
       " Kill intero
       autocmd FileType haskell nnoremap <localleader>ik :InteroKill<CR>
+      " Automatically kill Intero when :q is run from a .hs file
+      autocmd QuitPre *.hs InteroKill
 
       " Open intero/GHCi split horizontally
       autocmd FileType haskell nnoremap <localleader>io :InteroOpen<CR>
@@ -46,15 +60,15 @@ Add these lines to your **vimrc** file:
       autocmd FileType haskell nnoremap <localleader>ih :InteroHide<CR>
 
       " Manually save and reload
-      autocmd FileType haskell nnoremap <localleader>ir :InteroReload<CR>
+      autocmd FileType haskell nnoremap <localleader>ir :w<CR>:InteroReload<CR>
 
       " Load individual modules
       autocmd FileType haskell nnoremap <localleader>im :InteroLoadCurrentModule<CR>
       autocmd FileType haskell nnoremap <localleader>if :InteroLoadCurrentFile<CR>
 
-      " Type-related information
-      autocmd FileType haskell nnoremap <localleader>it <Plug>InteroGenericType
-      autocmd FileType haskell nnoremap <localleader>iT <Plug>InteroType
+      " Query type information
+      autocmd FileType haskell map <localleader>it <Plug>InteroGenericType
+      autocmd FileType haskell map <localleader>iT <Plug>InteroType
 
       " Insert type above identifier under cursor
       autocmd FileType haskell nnoremap <localleader>ii :InteroTypeInsert<CR>
