@@ -21,9 +21,10 @@ Here are the installation steps for Vim 8's built-in package manager:
 Usage
 =====
 
-This is the simple setup I'm working with right now, but please do check the
-README for the [intero-neovim](https://github.com/parsonsmatt/intero-neovim)
-project for a better suggested configuration.
+Here's a suggested configuration for your **vimrc** file.
+It includes all the lines from the suggested configuration for the
+intero-neovim plugin. I had to add a few extra lines to accommodate
+for differences between vim and neovim.
 
 Add these lines to your **vimrc** file:
 
@@ -37,7 +38,29 @@ Add these lines to your **vimrc** file:
 
       " Set this to 1 if you want intero-vim to start automatically when you
       " open a .hs file
-      let g:intero_start_immediately=0
+      let g:intero_start_immediately = 0
+
+      " Set this to 1 to
+      " display type information when the cursor is held down at an
+      " expression for (updatetime) milliseconds
+      let g:intero_type_on_hover = 0
+
+      " Set this to the desired width or height of the intero window
+      " If the split is horizontal this is the height
+      " If the split is vertical this is the width
+      " The default value for this variable is 10
+      let g:intero_window_size = 10
+
+      " The intero window splits horizontally by default
+      " Set this to 1 to make the window split vertically
+      let g:intero_vertical_split = 1
+
+      " The value of this option determines the delay (in milliseconds)
+      " after when type information for an expression will be displayed
+      " when the cursor is held over that expression
+      " (g:intero_type_on_hover must be set to 1 in order for the type
+      "  to actually be queryed!)
+      set updatetime = 1000
 
       " Load the neomake plugin files
       autocmd FileType haskell packadd neomake
@@ -47,40 +70,50 @@ Add these lines to your **vimrc** file:
       " directory, so we load an important script manually
       autocmd FileType haskell runtime OPT after/ftplugin/haskell/intero.vim 
 
+      " BACKGROUND PROCESS AND WINDOW MANAGEMENT
       " Start intero
-      autocmd FileType haskell nnoremap <localleader>is :InteroStart<CR>
+      autocmd FileType haskell nnoremap <silent> <localleader>is :InteroStart<CR>
       " Kill intero
-      autocmd FileType haskell nnoremap <localleader>ik :InteroKill<CR>
+      autocmd FileType haskell nnoremap <silent> <localleader>ik :InteroKill<CR>
       " Automatically kill Intero when :q is run from a .hs file
+      " Please note that I'm working on a better fix for this, as QuitPre
+      " is really not the autocommand that I want to trigger here
+      " It'll work for now though...
       autocmd QuitPre *.hs InteroKill
 
       " Open intero/GHCi split horizontally
-      autocmd FileType haskell nnoremap <localleader>io :InteroOpen<CR>
+      autocmd FileType haskell nnoremap <silent> <localleader>io :InteroOpen<CR>
+      " Open intero/GHCi split vertically
+      autocmd FileType haskell nnoremap <silent> <localleader>iov :InteroOpen<CR><C-W>H
       " Hide intero/GHCi split
-      autocmd FileType haskell nnoremap <localleader>ih :InteroHide<CR>
+      autocmd FileType haskell nnoremap <silent> <localleader>ih :InteroHide<CR>
 
+      " RELOADING (pick one)
+      " Automatically reload on save
+      autocmd BufWritePost *.hs InteroReload
       " Manually save and reload
-      autocmd FileType haskell nnoremap <localleader>ir :w<CR>:InteroReload<CR>
+      autocmd FileType haskell nnoremap <silent> <localleader>wr :w \| :InteroReload<CR>
 
-      " Load individual modules
-      autocmd FileType haskell nnoremap <localleader>im :InteroLoadCurrentModule<CR>
-      autocmd FileType haskell nnoremap <localleader>if :InteroLoadCurrentFile<CR>
+      " LOAD INDIVIDUAL MODULES
+      autocmd FileType haskell nnoremap <silent> <localleader>il :InteroLoadCurrentModule<CR>
+      autocmd FileType haskell nnoremap <silent> <localleader>if :InteroLoadCurrentFile<CR>
 
-      " Query type information
-      autocmd FileType haskell map <localleader>it <Plug>InteroGenericType
-      autocmd FileType haskell map <localleader>iT <Plug>InteroType
+      " QUERY TYPE-RELATED INFORMATION
+      autocmd FileType haskell map <silent> <localleader>t <Plug>InteroGenericType
+      autocmd FileType haskell map <silent> <localleader>T <Plug>InteroType
 
-      " Insert type above identifier under cursor
-      autocmd FileType haskell nnoremap <localleader>ii :InteroTypeInsert<CR>
+      " INSERT TYPE OF EXPRESSION UNDER CURSOR
+      autocmd FileType haskell nnoremap <silent> <localleader>it :InteroTypeInsert<CR>
 
+      " NAVIGATION
       " Go to the definition of the identifier under the cursor
       " To move back to the location you ran this mapping from, you can
       " use <Ctrl-O>
-      autocmd FileType haskell nnoremap <localleader>ig m':InteroGoToDef<CR>
+      autocmd FileType haskell nnoremap <silent> <localleader>jd m':InteroGoToDef<CR>
 
-      " Managing targets
+      " MANAGING TARGETS
       " Prompts you to enter targets (no silent):
-      " autocmd FileType haskell nnoremap <localleader>is :InteroSetTargets<SPACE>
+      autocmd FileType haskell nnoremap <localleader>ist :InteroSetTargets<SPACE>
     augroup END
     " }}}
 
@@ -173,8 +206,9 @@ after running `:InteroGoToDef` or equivalently `\ig`.  Note that
   the documentation implies that set updatetime=1000 is the default,
   but when I enable let `g:intero_type_on_hover = 1`,
   the type appears after 4 seconds, not one.
-  + *Cause* 
-  + *Fix*
+  + *Cause* I didn't include the line to set the option `updatetime` to
+`1000` in my suggested configuration
+  + *Fix* The line has been included in the suggested configuration now
 
 - While `:InteroUses` does use `:uses` in order to obtain the uses of the
   identifier under the cursor, it doesn't seem to do anything with that list;
