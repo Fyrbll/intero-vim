@@ -26,8 +26,6 @@ It includes all the lines from the suggested configuration for the
 intero-neovim plugin. I had to add a few extra lines to accommodate
 for differences between vim and neovim.
 
-Add these lines to your **vimrc** file:
-
     " intero-vim plugin mappings ------ {{{
     augroup intero_maps
       autocmd!
