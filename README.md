@@ -58,7 +58,7 @@ for differences between vim and neovim.
       " when the cursor is held over that expression
       " (g:intero_type_on_hover must be set to 1 in order for the type
       "  to actually be queryed!)
-      set updatetime = 1000
+      set updatetime=1000
 
       " Load the neomake plugin files
       autocmd FileType haskell packadd neomake
